@@ -1,0 +1,25 @@
+{
+  "name": "hot-shot-scorecard",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jake32321/hot-shot-scorecard.git"
+  },
+  "author": "Jacob Reed <jacob.reed2017@gmail.com>",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/jake32321/hot-shot-scorecard/issues"
+  },
+  "homepage": "https://github.com/jake32321/hot-shot-scorecard#readme",
+  "devDependencies": {
+    "chai": "^4.3.7",
+    "mocha": "^10.2.0"
+  },
+  "dependencies": {
+  }
+}
