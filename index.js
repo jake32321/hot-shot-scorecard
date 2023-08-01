@@ -1,2 +1,4 @@
 'use strict';
-const {} = require('')
+const ScoreCard = require('./models/score-card');
+
+module.exports = ScoreCard;

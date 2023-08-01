@@ -1,8 +1,8 @@
 {
   "name": "hot-shot-scorecard",
   "version": "1.0.0",
-  "description": "",
-  "main": "app.js",
+  "description": "A module that provides an algorithm for calculating the scorecard of a game of 'Hotshot' basketball",
+  "main": "index.js",
   "scripts": {
     "test": "mocha"
   },
@@ -19,7 +19,5 @@
   "devDependencies": {
     "chai": "^4.3.7",
     "mocha": "^10.2.0"
-  },
-  "dependencies": {
   }
 }

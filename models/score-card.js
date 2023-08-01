@@ -8,10 +8,13 @@ class ScoreCard {
         this._scoreCard = [];
 
         this.#calculateScoreCard();
+
+        console.log(this._scoreCard)
     }
 
     set jsonInput(json) {
-        if (typeof json === 'string') { // If we get a string, attempt to convert it to a JSON object
+        // If we get a string, attempt to convert it to a JSON object
+        if (typeof json === 'string') {
             try {
                 json = JSON.parse(json);
             } catch (err) {
@@ -19,7 +22,8 @@ class ScoreCard {
             }
         }
 
-        if (Array.isArray(json)) { // Arrays themselves are valid and parseable JSON. We need to make sure an JSON object is what the caller passed.
+        // Arrays themselves are valid and parseable JSON. We need to make sure an JSON object is what the caller passed.
+        if (Array.isArray(json)) {
             throw new Error(`The provided JSON data must be a JSON object and not an array. Please verify the JSON's structure.`);
         }
 
@@ -49,6 +53,7 @@ class ScoreCard {
 
         const rounds = this._jsonInput.rounds;
 
+        // Basic check to make sure that all ten rounds are completed before proceeding with scoring.
         if (!Array.isArray(rounds) || rounds.length !== 10) {
             throw new Error('"rounds" must be an instance of an Array with ten entries in the provided JSON data.');
         }
@@ -84,10 +89,12 @@ class ScoreCard {
             const roundsOverThirty = this._scoreCard.filter(round => round._baseScore >= 30);
             const totalAllowedBonusShots = roundsOverThirty.length*2;
 
+            // Ensure the player is not taking more than the alotted number of shots.
             if (madeShots.length > totalAllowedBonusShots) {
                 throw new Error('More than twice the shots with thirty points were taken in the final round with the Heatcheck modifier.');
             }
 
+            // Multiplier is swapped for a 2x modifier for the final round.
             multiplier = 2;
         } else if (madeShots.length > 3) {
             throw new Error('More than three bonus shots were taken in a non-final round with a Heatcheck modifier.');
@@ -105,6 +112,7 @@ class ScoreCard {
             const madeShotSpots = madeShots.map(({ spot }) => spot);
             const appearsMoreThanOnce = madeShotSpots.filter((spot, index) => madeShotSpots.indexOf(spot) !== index );
 
+            // Only allow for someone to make a shot from each spot once.
             if (appearsMoreThanOnce.length !== 0) {
                 throw new Error('A bonus shot from a spot was made more than once for a final round with a GOAT modifier.');
             } 
