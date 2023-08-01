@@ -1,10 +1,13 @@
 'use strict';
 const Round = require('./round');
+const { scoringSpots } = require('../lib/constants');
 
 class ScoreCard {
     constructor(jsonInput) {
-        this.jsonInput = jsonInput;
-        this.scoreCard = this.#buildScoreCardFromJSON();
+        this._jsonInput = jsonInput;
+        this._scoreCard = [];
+
+        this.#calculateScoreCard();
     }
 
     set jsonInput(json) {
@@ -27,7 +30,19 @@ class ScoreCard {
         return this._jsonInput;
     }
 
-    #buildScoreCardFromJSON() {
+    get scoreCard() {
+        const scoreCardArr = [];
+
+        let runningTotal = 0;
+        for (const { _bonusScore, _baseScore } of this._scoreCard) {
+            runningTotal += _bonusScore + _baseScore;
+            scoreCardArr.push(runningTotal);
+        }
+
+        return scoreCardArr;
+    }
+
+    #calculateScoreCard() {
         if(!this._jsonInput.rounds) {
             throw new Error('"rounds" is required in the provided JSON data.');
         }
@@ -38,17 +53,68 @@ class ScoreCard {
             throw new Error('"rounds" must be an instance of an Array with ten entries in the provided JSON data.');
         }
 
-        const scoreCardArr = [];
         for (const [index, round] of rounds.entries()) {
-            scoreCardArr.push(new Round({
-                round_num: index + 1,
-                ...round
-            }));
+            const currRound = new Round({ round_num: index + 1, ...round });
+
+             // Apply moddifiers
+             // We need to have all of the scores before confirming the heatcheck bonus for round #10
+            if (currRound._isHeatcheck && currRound._roundNum !== 10) {
+                this.#calculateHeatcheckPoints(currRound);
+            }
+
+            if (currRound._isGOAT) {
+                this.#calculateGOATPoints(currRound);
+            }
+
+            this._scoreCard.push(currRound);
         }
 
-        // TODO: call calculation scripts and add overall score for a round
+        // Calculate the final with a heatcheck modifier now that we have all of the previous base scores.
+        const roundTen = this._scoreCard[this._scoreCard.length - 1];
+        if (roundTen._isHeatcheck) {
+            this.#calculateHeatcheckPoints(roundTen);
+        }
+    }
 
-        return scoreCardArr;
+    #calculateHeatcheckPoints(round) {
+        const madeShots = round._bonusShots.filter(({ type }) => type === 'heatcheck');
+
+        let multiplier = 3;
+        if (round._roundNum === 10) {
+            const roundsOverThirty = this._scoreCard.filter(round => round._baseScore >= 30);
+            const totalAllowedBonusShots = roundsOverThirty.length*2;
+
+            if (madeShots.length > totalAllowedBonusShots) {
+                throw new Error('More than twice the shots with thirty points were taken in the final round with the Heatcheck modifier.');
+            }
+
+            multiplier = 2;
+        } else if (madeShots.length > 3) {
+            throw new Error('More than three bonus shots were taken in a non-final round with a Heatcheck modifier.');
+        }
+
+        for (const { spot } of madeShots) {
+            round._bonusScore += scoringSpots[spot]*multiplier;
+        }
+    }
+    
+    #calculateGOATPoints(round) {
+        const madeShots = round._bonusShots.filter(({ type }) => type === 'goat');
+
+        if (round._roundNum === 10) {
+            const madeShotSpots = madeShots.map(({ spot }) => spot);
+            const appearsMoreThanOnce = madeShotSpots.filter((spot, index) => madeShotSpots.indexOf(spot) !== index );
+
+            if (appearsMoreThanOnce.length !== 0) {
+                throw new Error('A bonus shot from a spot was made more than once for a final round with a GOAT modifier.');
+            } 
+        } else if (madeShots.length > 4) {
+            throw new Error('More than four bonus shots were taken in a non-final round with a GOAT modifier.');
+        }
+
+        for (const { spot } of madeShots) {
+            round._bonusScore += scoringSpots[spot];
+        }
     }
 }
 

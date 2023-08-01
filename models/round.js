@@ -8,7 +8,6 @@ class Round {
         attempted_shots = [],
         made_bonus_shots = []
     }) {
-
         // Round information
         this._roundNum = round_num;
         this._madeShots = made_shots;
@@ -17,31 +16,29 @@ class Round {
 
         // Round scoring
         if (this.#checkIsDQ()) {
+            this._bonusScore = 0;
             this._baseScore = 0;
             this._isGOAT = false;
             this._isHeatcheck = false;
         } else {
+            this._bonusScore = 0;
             this._baseScore = this.#calcBaseScore();
             this._isGOAT = this.#checkIsGOAT();
-            this._isHeatcheck = this.#checkIsHeatcheck(this.baseScore);
+            this._isHeatcheck = this.#checkIsHeatcheck(this._baseScore);
         }
     }
 
     #checkIsDQ() {
         const redShots = this._madeShots.filter(shotLoc => shotLoc.includes('red'));
 
-        if (redShots.length > 2) {
-            return true;
-        }
+        if (redShots.length > 2) return true;
 
         return false;
     }
 
     #checkIsGOAT() {
         for (const scoringSpot of Object.keys(scoringSpots)) {
-            if (!this._madeShots.includes(scoringSpot)) {
-                return false;
-            }
+            if (!this._madeShots.includes(scoringSpot)) return false;
         }
 
         return true;
