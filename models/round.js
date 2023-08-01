@@ -1,73 +1,45 @@
 'use strict';
-const { scoring, scoringSpots } = require('../lib/constants');
+const { scoringSpots } = require('../lib/constants');
 
 class Round {
-    constructor(opts) {
-        const {
-            round_num,
-            made_shots,
-            attempted_shots,
-            made_bonus_shots
-        } = opts;
+    constructor({
+        round_num,
+        made_shots = [],
+        attempted_shots = [],
+        made_bonus_shots = []
+    }) {
 
-        this.roundNum = round_num;
-        this.madeShots = made_shots;
-        this.attemptedShots = attempted_shots;
-        this.bonusShots = made_bonus_shots;
-        this.isGOAT = this.checkIsGOAT(); 
+        // Round information
+        this._roundNum = round_num;
+        this._madeShots = made_shots;
+        this._attemptedShots = attempted_shots;
+        this._bonusShots = made_bonus_shots;
+
+        // Round scoring
+        if (this.#checkIsDQ()) {
+            this._baseScore = 0;
+            this._isGOAT = false;
+            this._isHeatcheck = false;
+        } else {
+            this._baseScore = this.#calcBaseScore();
+            this._isGOAT = this.#checkIsGOAT();
+            this._isHeatcheck = this.#checkIsHeatcheck(this.baseScore);
+        }
     }
 
-    set roundNum(roundNumber = 1) {
-        if (typeof roundNumber !== 'number') {
-            throw new Error('"round_num" must be an instance of a number');
+    #checkIsDQ() {
+        const redShots = this._madeShots.filter(shotLoc => shotLoc.includes('red'));
+
+        if (redShots.length > 2) {
+            return true;
         }
 
-        this._roundNum = roundNumber;
+        return false;
     }
 
-    set madeShots(madeShotsArr = []) {
-        if (!Array.isArray(madeShotsArr)) {
-            throw new Error('"made_shots" must be an instance of an Array');
-        }
-
-        this._madeShots = madeShotsArr;
-    }
-
-    set attemptedShots(attemptedShotsArr = []) {
-        if (!Array.isArray(attemptedShotsArr)) {
-            throw new Error('"attempted_shots" must be an instance of an Array');
-        }
-
-        this._attemptedShots = attemptedShotsArr;
-    }
-
-    set bonusShots(bonusShotsArr = []) {
-        if (!Array.isArray(bonusShotsArr)) {
-            throw new Error('"bonus_shots" must be an instance of an Array');
-        }
-
-        this._bonusShots = bonusShotsArr;
-    }
-
-    get roundNum() {
-        return this._roundNum;
-    }
-
-    get attemptedShots() {
-        return this._attemptedShots;
-    }
-
-    get madeShots() {
-        return this._madeShots;
-    }
-
-    get bonusShots() {
-        return this._bonusShots;
-    }
-
-    checkIsGOAT() {
+    #checkIsGOAT() {
         for (const scoringSpot of Object.keys(scoringSpots)) {
-            if (!this.madeShots.includes(scoringSpot)) {
+            if (!this._madeShots.includes(scoringSpot)) {
                 return false;
             }
         }
@@ -75,12 +47,26 @@ class Round {
         return true;
     }
 
-    isHeatcheck() {
-
+    #checkIsHeatcheck(score) {
+        return score >= 45
     }
 
-    calcScore() {
-        
+    #calcBaseScore() {
+        let score = 0;
+        for (const madeShot of this._madeShots) {
+            score += scoringSpots[madeShot];
+        }
+
+        score -= this.#calcDeductions();
+
+        return score;
+    }
+
+    #calcDeductions() {
+        const missedRedShots = this._attemptedShots
+            .filter(shotLoc => !this._madeShots.includes(shotLoc) && shotLoc.includes('red'));
+
+        return missedRedShots.length*2;
     }
 }
 

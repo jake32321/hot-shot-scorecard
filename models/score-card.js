@@ -4,7 +4,7 @@ const Round = require('./round');
 class ScoreCard {
     constructor(jsonInput) {
         this.jsonInput = jsonInput;
-        this.scoreCard = this.buildScoreCardFromJSON();
+        this.scoreCard = this.#buildScoreCardFromJSON();
     }
 
     set jsonInput(json) {
@@ -27,7 +27,7 @@ class ScoreCard {
         return this._jsonInput;
     }
 
-    buildScoreCardFromJSON() {
+    #buildScoreCardFromJSON() {
         if(!this._jsonInput.rounds) {
             throw new Error('"rounds" is required in the provided JSON data.');
         }
