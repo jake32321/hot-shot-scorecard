@@ -1,5 +1,5 @@
 'use strict';
-const { scoringSpots } = require('../lib/constants');
+const { scoringSpots } = require('../utils/constants');
 
 class Round {
     constructor({
