@@ -13,22 +13,22 @@ A Node.js module for scoring a basketball game of "Hotshot".
 
 ## Rules of Hotshot
 1. There are 8 spots on the court that can be used for scoring in Hotshot.
-    a. Top of the three point line = 5 points
-    b. Middle of the free-throw line = 4 points
-    c. Left/right of the free-throw line = 3 points
-    d. Left/right of the basket outside the box = 2 points
-    e. Left/right layups = 1 point
+    - Top of the three point line = 5 points
+    - Middle of the free-throw line = 4 points
+    - Left/right of the free-throw line = 3 points
+    - Left/right of the basket outside the box = 2 points
+    - Left/right layups = 1 point
 2. You can only earn 2 total points from baskets made in the layup spots per round. A round is forfeited and given a 0 score if you forget this rule and make more than 2 layups in a round. 
 3. A heatcheck upgrade is when you score at least 45 points in a round (not including bonus points).
 4. A GOAT round upgrade indicates you made at least one shot from each spot in a single round.
 5. Scoring for each round is based on the number of points you accumulate in that round from made shots + bonus shots made points.
-    a. Rounds 1-9 scoring:
+    - Rounds 1-9 scoring:
         - For a heatcheck round, you get 3 bonus shot attempts, worth triple points. 
         - Earning a GOAT round earns you 4 bonus shots for that round.
-    b. Final round (10th) scoring:
+    - Final round (10th) scoring:
         - In a heatcheck final round, you get two bonus shot attempts for each round you made 30+ points (excludes bonus points) over the course of the entire game. These bonus shots are worth double points. 
         - In a GOAT final round, you get one bonus shot from each of the 8 hotshot spots.
-    c. Two points are deducted for missed layup shots. No points deducted for missed bonus layup shots.
+    - Two points are deducted for missed layup shots. No points deducted for missed bonus layup shots.
 6. Upgrades are not mutually exclusive, meaning GOATs and heatchecks can both be earned in individual rounds. Upgrades are only earned with non-bonus shot makes.
 7. Winner is determined by the player with the most points.
 
