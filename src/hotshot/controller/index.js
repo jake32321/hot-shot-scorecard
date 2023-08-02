@@ -71,7 +71,7 @@ factory.buildScoreCard = function(jsonData) {
 
     // Basic check to make sure that all ten rounds are completed before proceeding with scoring.
     if (!Array.isArray(rounds) || rounds.length !== 10) {
-        throw new Error('"rounds" must be an instance of an Array with ten entries in the provided JSON data.');
+        throw new Error('"rounds" must be an instance of an array with ten entries in the provided JSON data.');
     }
 
     const scoreCardArr = [];
