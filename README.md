@@ -1,6 +1,5 @@
 # hot-shot-scorecard
-
-A Node.js module for scoring a basketball game of "Hotshot". 
+A Node.js/Express.js web API for scoring a basketball game of "Hotshot". 
 
 ## Features
 - Ten-round scoring for a single game of "Hotshot".
@@ -47,7 +46,7 @@ $ npm start
 From here you can use Postman, Insomnia, or cURL to make a request to `http://localhost:3000/hotshot/calculate-scorecard`. The 
 
 ## Test Execution/Coverage Reporting
-As with many Node.js modules, this module comes packed with tests, the ability to execute those tests via Mocha, and the ability to generate coverage reports using Istanbul.
+As with many Node.js modules, this application comes packed with tests, the ability to execute those tests via Mocha, and the ability to generate coverage reports using Istanbul.
 ```shell
 $ npm test # Execute just the inclueded tests without including coverage results.
 $ npm run coverage # Execute the included tests and generate a coverage report.
