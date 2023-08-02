@@ -1,0 +1,33 @@
+{
+  "name": "hot-shot-scorecard",
+  "version": "1.0.0",
+  "description": "A module that provides an algorithm for calculating the scorecard of a game of 'Hotshot' basketball",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha test/**/*.js",
+    "start": "node app.js",
+    "lint": "eslint --fix *.js",
+    "coverage": "nyc --reporter=html --reporter=text-summary npm t"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jake32321/hot-shot-scorecard.git"
+  },
+  "author": "Jacob Reed <jacob.reed2017@gmail.com>",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/jake32321/hot-shot-scorecard/issues"
+  },
+  "homepage": "https://github.com/jake32321/hot-shot-scorecard#readme",
+  "devDependencies": {
+    "chai": "^4.3.7",
+    "eslint": "^8.46.0",
+    "mocha": "^10.2.0",
+    "nyc": "^15.1.0",
+    "pre-commit": "^1.2.2"
+  },
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "express": "^4.18.2"
+  }
+}
