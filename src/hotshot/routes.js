@@ -7,7 +7,8 @@ const router = express.Router();
 router.post(
     '/calculate-scorecard',
     (req, res) => {
-        controller.buildScoreCard(res, req.body);
+        const scorecard = controller.buildScoreCard(req.body);
+        return res.json({ scorecard });
     }
 );
 

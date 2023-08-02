@@ -94,10 +94,10 @@ factory.buildScoreCard = function(jsonData) {
     // Calculate the final with a heatcheck modifier now that we have all of the previous base scores.
     const roundTen = scoreCardArr[scoreCardArr.length - 1];
     if (roundTen._isHeatcheck) {
-        factory._private.calculateHeatcheckPoints(roundTen);
+        factory._private.calculateHeatcheckPoints(roundTen, scoreCardArr);
     }
 
-    return factory._private.caculateFinalScores();
+    return factory._private.caculateFinalScores(scoreCardArr);
 }
 
 module.exports = factory;

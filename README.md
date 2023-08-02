@@ -5,11 +5,11 @@ A Node.js module for scoring a basketball game of "Hotshot".
 ## Features
 - Ten-round scoring for a single game of "Hotshot".
 - Ability to apply "GOAT" and "Heatcheck" modifiers for scoring bonus points.
-- Portability with minimal third-party dependencies for a lean module.
 - Support for Node.js 18.x.x or newer. 
 - Low execution time for quick score calculation.
 - Custom models for defining constants between rounds and the overall scorecard.
-- Use of Common.js standards
+- Use of Common.js standards.
+- Express based web API.
 
 ## Rules of Hotshot
 1. There are 8 spots on the court that can be used for scoring in Hotshot.
@@ -34,38 +34,17 @@ A Node.js module for scoring a basketball game of "Hotshot".
 
 ## Quickstart
 
-Since we are just providing an algorithm and means to calculate the overall scoring for a game of "Hotshot", the overall usage instructions are simple for the time being.
-
-Install the dependencies first. This is only required when installing necessary testing harnesses like `mocha` and `chai`. Else, you can continue past this point and get right to using the code.
+Install the dependencies first.
 ```shell
 $ npm install
 ```
 
-### Node.js REPL
-Next you can use this directly from the Node.js REPL if so desired. The required JSON file with the data can be swapped with a pure JSON object or a different `require`'d file from the example below.
+Next, start the application.
 ```shell
-$ node
-$ Welcome to Node.js v18.17.0.
-$ Type ".help" for more information.
-$ > const json = require('./test/fixtures/dummy-scores.json'); 
-$ undefined 
-$ > const ScoreCard = require('.');
-$ undefined
-$ > const { scoreCard } = new ScoreCard(json);
-$ undefined
-$ > scoreCard 
-$ [
-   9, 21,  56,  68,  75,
-  75, 90, 100, 114, 129
-]
+$ npm start
 ```
 
-### Importing as A Module
-There is a possibility to require this as a module using `npm link`. This will need to be used in place of the typical install methon (i.e. `npm install`) since the module is not published to a registry. Once done, you can use this as you would any other module in the Node.js ecosystem and use it as described in **Node.js REPL** above.
-```shell
-$ npm link # From within this project's directory
-$ npm link hot-shot-scorecard # From within the project where you wish to require this as a module
-```
+From here you can use Postman, Insomnia, or cURL to make a request to `http://localhost:3000/hotshot/calculate-scorecard`. The 
 
 ## Test Execution/Coverage Reporting
 As with many Node.js modules, this module comes packed with tests, the ability to execute those tests via Mocha, and the ability to generate coverage reports using Istanbul.
@@ -78,8 +57,8 @@ $ open coverage/index.html # Opens the generated HTML coverage report if more de
 ## Data and Models
 Included below is a brief description of the data models and expected data formating.
 
-### Ingested JSON Model
-Below is the model for the expected JSON input to the module. 
+### API JSON Request Model
+Below is the model for the expected JSON input to the API. 
 - `rounds`: An array of JSON objects indicating the scoring positions, attempted shots, and scoring bonus shots. There will always be ten entries in this array indicating each of the ten rounds played.
     - `made_shots`: An array of scoring positions where a basket was made that isn't a bonus shot.
     - `attempted_shots`: An array of attempted shots and their positions. Shots that have been made will be included here as well.
@@ -111,6 +90,16 @@ Below is the model for the expected JSON input to the module.
 }
 ```
 
+### API JSON Response Model
+The reponse model for the returned scorecard.
+- `scorecard`: The cumulative scores for each round of the game.
+
+```json
+{
+  "scorecard": [ 9, 21, 56, 68, 75, 75, 90, 100, 258, 404 ]
+}
+```
+
 ### Round
 A round data model is used to store specific information about a particular round including information about scoring and the modifiers that are being applied. 
 - `_roundNum`: The number indicating which round of the game this is for.
@@ -132,46 +121,4 @@ Round {
     _isGOAT: false,
     _isHeatcheck: false
   }
-```
-
-### ScoreCard
-A score card acting as the collection point for each of the `Rounds` in the game. 
-- `_jsonInput`: The provided and parsed JSON object representing the game details for each of the rounds.
-- `_scoreCard`: An array of `Rounds` each containing relevant information about the scoring and multipliers for each round.
-
-```shell
-ScoreCard {
-  _jsonInput: {
-    rounds: [
-      [Object], [Object],
-      [Object], [Object],
-      [Object], [Object],
-      [Object], [Object],
-      [Object], [Object]
-    ]
-  },
-  _scoreCard: [
-    Round {
-      _roundNum: 1,
-      _madeShots: [Array],
-      _attemptedShots: [Array],
-      _bonusShots: [],
-      _bonusScore: 0,
-      _baseScore: 9,
-      _isGOAT: false,
-      _isHeatcheck: false
-    },
-    Round {
-      _roundNum: 2,
-      _madeShots: [Array],
-      _attemptedShots: [Array],
-      _bonusShots: [],
-      _bonusScore: 0,
-      _baseScore: 12,
-      _isGOAT: false,
-      _isHeatcheck: false
-    },
-    # ...
-  ]
-}
 ```
